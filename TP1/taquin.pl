@@ -177,8 +177,8 @@ delete(N,X,[Y|L], [Y|R]) :-
    %*************
    
 heuristique(U,H) :-
-    heuristique1(U, H).  % au debut on utilise l'heuristique 1 
-%   heuristique2(U, H).  % ensuite utilisez plutot l'heuristique 2  
+	heuristique1(U, H).  % au debut on utilise l'heuristique 1 
+%	heuristique2(U, H).  % ensuite utilisez plutot l'heuristique 2  
    
    
 	%****************
@@ -220,7 +220,9 @@ heuristique(U,H) :-
    % Somme des distances de Manhattan à parcourir par chaque piece
    % entre sa position courante et sa positon dans l'etat final
 
-	distance_manhattan(U,F,P,H) :- coordonnees([L1,C1],U,P), coordonnees([L2,C2],F,P),
+	distance_manhattan(U,F,P,H) :- 
+		coordonnees([L1,C1],U,P), 
+		coordonnees([L2,C2],F,P),
 		H is abs(L1-L2)+abs(C1-C2).
 
     heuristique2(U, H) :- 
