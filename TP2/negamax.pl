@@ -3,14 +3,11 @@
 	negamax) et l'illustre sur le jeu du TicTacToe (morpion 3x3)
 	*/
 	
+	
+:- use_module(library(clpfd)).
 :- [tictactoe].
 
-
-	/****************************************************
-  	ALGORITHME MINMAX avec convention NEGAMAX : negamax/5
-  	*****************************************************/
-
-	/*
+/*
 	negamax(+J, +Etat, +P, +Pmax, [?Coup, ?Val])
 
 	SPECIFICATIONS :
@@ -53,9 +50,12 @@
 	- finalement le couple retourne par negamax est [Coup, V2]
 	avec : V2 is -V1 (cf. convention negamax vue en cours).
 
-A FAIRE : ECRIRE ici les clauses de negamax/5
-.....................................
-	*/
+*/
+
+	/****************************************************
+  	ALGORITHME MINMAX avec convention NEGAMAX : negamax/5
+  	*****************************************************/
+	
 % Cas 1 : la profondeur maximale est atteinte
 negamax(J,Etat,Pmax,Pmax,[nil,Val]):-heuristique(J,Etat,Val).
 
@@ -90,6 +90,23 @@ successeurs(J,Etat,Succ) :-
 	findall([Coup,Etat_Suiv],
 		    successeur(J,Etat_Suiv,Coup),
 		    Succ).
+/*	remove_sym_list(Succ2,Succ2,Succ).
+			
+remove_sym_list([],Res,Res).
+
+remove_sym_list([S1|L1],Inter,Res):-
+	remove_sym(S1,Inter ,L2),	
+	remove_sym_list(L1,L2,Res).
+	
+remove_sym(_,[],[]).
+remove_sym(S1,[S2|L2],[S2|L3]):-
+	not(situation_symetrique(S1,S2)),
+	remove_sym(S1,L2,L3).
+	
+remove_sym(S1,[S2|L2],L3):-
+	situation_symetrique(S1,S2),
+	remove_sym(S1,L2,L3).*/
+	
 
 	/*************************************
          Boucle permettant d'appliquer negamax 
@@ -104,7 +121,8 @@ successeurs(J,Etat,Succ) :-
 
 loop_negamax(_,_, _  ,[],                []).
 loop_negamax(J,P,Pmax,[[Coup,Suiv]|Succ],[[Coup,Vsuiv]|Reste_Couples]) :-
-	% On récupère le couple [Coup,Suiv] dans Successeurs et on met le couple [Coup,Vsuiv] dans Liste_Couples
+	% On récupère le couple [Coup,Suiv] dans Successeurs et 
+	% on met le couple [Coup,Vsuiv] dans Liste_Couples
 	loop_negamax(J,P,Pmax,Succ,Reste_Couples), 
 	% On alterne de joueur
 	adversaire(J,A),
@@ -171,7 +189,7 @@ meilleur([[Coup,Vsuiv]|Reste_Couples],Meilleur_Couple):-
 	
 test_meilleur() :-
 	writeln("Test meilleur(+Liste_de_Couples, ?Meilleur_Couple)"),
-	write("meilleur([[a,1],[b,51],[c,62],[d,4]],[Mcoup,MV]) : ["),
+	write("meilleur([[a,-1],[b,-51],[c,-62],[d,-4]],[Mcoup,MV]) : ["),
 	meilleur([[a,-1],[b,-51],[c,-62],[d,-4]],[Mcoup,MV]),
 	write(Mcoup),write(","),write(MV),writeln(']').
 
@@ -183,7 +201,31 @@ main(B,V, Pmax) :-
 	situation_initiale(Etat),
 	joueur_initial(J),
 	negamax(J,Etat,0,Pmax,[B,V]).
+	
+	/******************
+  	SITUATION SYMETRIQUE
+  	*******************/	
+	
+matrix_rotated(Xss, Zss) :-
+	transpose(Xss, Yss),
+	maplist(reverse, Yss, Zss).
 
+nrotate(0,M,M).
+
+nrotate(N,M,M2) :-
+	not(N = 0),
+	N1 is N-1,
+	matrix_rotated(M,M3),
+	nrotate(N1,M3,M2).
+	
+situation_symetrique(S1,S2) :- % Rotation
+	between(1,3,N), % 4eme rotation = lui-meme
+	nrotate(N,S1,S2).
+	
+situation_symetrique(S1,S2) :- % Symetrie horizontale + rotation
+	reverse(S1,S3),
+	between(1,3,N), % 4eme rotation = lui-meme
+	nrotate(N,S3,S2).
 
 	/*
 A FAIRE :

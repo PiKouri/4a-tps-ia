@@ -42,11 +42,11 @@ Tests unitaires
 heuristique(x,[[_,_,_],[x,x,x],[_,_,_]],H).
 H = 10000.
 heuristique(x,[[_,_,_],[_,_,x],[_,_,_]],H).
-H = 8.
+H = 2.
 heuristique(x,[[_,_,_],[_,x,_],[_,_,_]],H).
-H = 16.
+H = 4.
 heuristique(o,[[_,_,_],[_,x,_],[_,_,_]],H).
-H = -16.
+H = -4.
 
 3/
 Quel prédicat permet de connaître sous forme de liste l’ensemble des couples [Coord, Situation_Resultante]?
@@ -69,12 +69,12 @@ Test unitaire : test_meilleur.
 
 Test main(B,V,Pmax)
   B   |V  |Pmax
-[2,2] | 16|1
-[2,2] | 4 |2
-[2,2] | 12|3
-[2,2] | 2 |4
-[2,2] | 10|5
-[2,2] | 2 |6
-[2,2] | 6 |7
-[3,3] | 10000  |8
-[2,2] |   |9
+[2,2] | 4 |1
+[2,2] | 1 |2
+[2,2] | 3 |3
+[2,2] | 1 |4
+[2,2] | 3 |5
+[2,2] | 1 |6
+[2,2] | 2 |7
+[3,3] | ? |8
+[2,2] | ? |9
